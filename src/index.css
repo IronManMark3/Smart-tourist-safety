@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root { color-scheme: light dark; }
+html, body, #root { height: 100%; }
+
+body {
+  @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100;
+}
+
+/* UI primitives */
+.card { @apply rounded-2xl border border-neutral-200/60 dark:border-neutral-800/60 bg-white/70 dark:bg-neutral-900/60 backdrop-blur p-5 shadow-sm; }
+
+/* Base button (utility-only) */
+.btn { @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition; }
+
+/* Variants MUST re-apply utilities (can't @apply .btn) */
+.btn-primary {
+  @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition
+         bg-neutral-900 text-white dark:bg-white dark:text-neutral-900;
+}
+.btn-ghost {
+  @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition
+         bg-transparent hover:bg-neutral-100/60 dark:hover:bg-neutral-800/50;
+}
+
+.badge { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs border border-neutral-300/70 dark:border-neutral-700/70; }
+.input { @apply w-full rounded-xl border border-neutral-300/70 dark:border-neutral-700/70 bg-transparent px-3 py-2 outline-none focus:ring-2 focus:ring-neutral-400/50; }
+.table { @apply w-full text-sm; }
+.table th { @apply text-left font-semibold border-b border-neutral-200 dark:border-neutral-800 pb-2; }
+.table td { @apply border-b border-neutral-100 dark:border-neutral-900 py-3; }
