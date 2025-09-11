@@ -1,10 +1,9 @@
 export default function StatCard({ label, value, sub }) {
-    return (
-      <div className="card">
-        <div className="text-xs opacity-70">{label}</div>
-        <div className="text-2xl font-semibold mt-1">{value}</div>
-        {sub && <div className="text-xs opacity-60 mt-1">{sub}</div>}
-      </div>
-    )
-  }
-  
+  return (
+    <div className="card">
+      <div className="text-xs text-soft">{label}</div>
+      <div className="mt-1 text-3xl font-semibold tracking-tight">{value}</div>
+      {sub && <div className="mt-1 text-xs opacity-70">{sub}</div>}
+    </div>
+  )
+}

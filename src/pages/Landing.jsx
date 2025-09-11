@@ -10,12 +10,11 @@ export default function Landing() {
             Smart Tourist Safety Monitoring <span className="opacity-70">&</span> Incident Response
           </h1>
           <p className="opacity-80">
-            Demo prototype for Digital ID, live geofencing, SOS, anomaly hints, and an authority dashboard with alerts & E-FIR.
-            Built with React, Tailwind, Leaflet & Zustand.
+            Now with secure login: Tourists must sign in & complete onboarding. Authority access is restricted to pre-registered users.
           </p>
           <div className="flex gap-3">
-            <Link to="/tourist" className="btn-primary">Enter Tourist App</Link>
-            <Link to="/authority" className="btn-ghost">Open Authority Dashboard</Link>
+            <Link to="/auth/login" className="btn-primary">Tourist: Login / Sign up</Link>
+            <Link to="/auth/login" className="btn-ghost">Authority: Login</Link>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3">

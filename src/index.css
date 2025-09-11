@@ -1,32 +1,221 @@
+/* index.css — Tailwind v4 + Vite
+   - Keeps Leaflet styles for react-leaflet
+   - Enables dark: variant via @custom-variant for .dark class
+   - Provides modern light/dark tokens and UI primitives used by your components
+*/
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root { color-scheme: light dark; }
+/* -------------------------------------------------------
+   THEME TOKENS (warm light / deep navy dark — no hard black)
+-------------------------------------------------------- */
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces */
+  --bg: 220 30% 98%;
+  --surface: 220 28% 96%;
+  --card: 45 40% 97%;     /* creamish “white” */
+  --muted: 220 15% 86%;
+
+  /* Text */
+  --text: 222 20% 16%;
+  --text-soft: 222 12% 35%;
+
+  /* Accents */
+  --primary: 268 83% 58%;
+  --primary-2: 312 74% 54%;
+  --info: 200 88% 46%;
+  --warning: 45 100% 52%;
+  --danger: 0 78% 52%;
+
+  /* Radii + Shadows */
+  --shadow-1: 0 6px 24px rgba(16, 24, 40, .06);
+  --shadow-2: 0 12px 36px rgba(16, 24, 40, .12);
+
+  /* Safe area (for notches) */
+  --sa-top: env(safe-area-inset-top, 0px);
+  --sa-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root:has(.dark),
+.dark {
+  --bg: 222 44% 8%;
+  --surface: 225 38% 12%;
+  --card: 225 36% 14%;
+  --muted: 225 18% 24%;
+
+  --text: 220 25% 92%;
+  --text-soft: 220 15% 70%;
+
+  --primary: 278 83% 66%;
+  --primary-2: 318 75% 60%;
+  --info: 200 92% 62%;
+  --warning: 45 100% 58%;
+  --danger: 0 85% 60%;
+
+  --shadow-1: 0 6px 24px rgba(2, 6, 23, .35);
+  --shadow-2: 0 12px 36px rgba(2, 6, 23, .55);
+}
+
+/* -------------------------------------------------------
+   BASE
+-------------------------------------------------------- */
 html, body, #root { height: 100%; }
 
-body {
-  @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100;
+@layer base {
+  body {
+    @apply antialiased;
+    background-color: hsl(var(--bg));
+    color: hsl(var(--text));
+    padding-bottom: calc(8px + var(--sa-bottom)); /* keep content above iOS home bar */
+  }
+
+  /* Subtle scrollbar */
+  * { scrollbar-width: thin; scrollbar-color: hsl(var(--muted)) transparent; }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 9999px;
+  }
+
+  a { color: hsl(var(--info)); }
+  a:hover { filter: brightness(1.07); }
 }
 
-/* UI primitives */
-.card { @apply rounded-2xl border border-neutral-200/60 dark:border-neutral-800/60 bg-white/70 dark:bg-neutral-900/60 backdrop-blur p-5 shadow-sm; }
+/* -------------------------------------------------------
+   COMPONENT PRIMITIVES
+-------------------------------------------------------- */
+@layer components {
+  .page {
+    @apply min-h-dvh p-4 md:p-6 lg:p-8;
+    background:
+      radial-gradient(1200px 600px at 10% -10%,
+        color-mix(in oklab, hsl(var(--primary)) 16%, transparent) 0%,
+        transparent 70%),
+      radial-gradient(1200px 600px at 120% 10%,
+        color-mix(in oklab, hsl(var(--primary-2)) 14%, transparent) 0%,
+        transparent 70%),
+      hsl(var(--bg));
+  }
 
-/* Base button (utility-only) */
-.btn { @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition; }
+  .card {
+    @apply rounded-2xl p-4 sm:p-5 backdrop-blur;
+    background:
+      linear-gradient(180deg,
+        color-mix(in oklab, hsl(var(--card)) 92%, transparent) 0%,
+        color-mix(in oklab, hsl(var(--card)) 84%, transparent) 100%);
+    border: 1px solid color-mix(in oklab, hsl(var(--muted)) 38%, transparent);
+    box-shadow: var(--shadow-1);
+  }
 
-/* Variants MUST re-apply utilities (can't @apply .btn) */
-.btn-primary {
-  @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition
-         bg-neutral-900 text-white dark:bg-white dark:text-neutral-900;
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2.5
+           text-sm font-medium select-none transition-all active:scale-[.98];
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-1);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2.5
+           text-sm font-medium select-none transition-all active:scale-[.98] text-white;
+    background: linear-gradient(135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary-2)) 100%);
+    box-shadow: var(--shadow-2);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2.5
+           text-sm font-medium select-none transition-all active:scale-[.98];
+    background: transparent;
+    border-color: color-mix(in oklab, hsl(var(--muted)) 40%, transparent);
+  }
+  .btn-ghost:hover {
+    background: color-mix(in oklab, hsl(var(--card)) 80%, transparent);
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 rounded-2xl px-4 py-2.5
+           text-sm font-medium select-none transition-all active:scale-[.98] text-white;
+    background: linear-gradient(135deg,
+      hsl(var(--danger)) 0%,
+      color-mix(in oklab, hsl(var(--danger)) 80%, hsl(var(--warning))) 100%);
+    box-shadow: var(--shadow-2);
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs;
+    border: 1px solid color-mix(in oklab, hsl(var(--muted)) 40%, transparent);
+    background: color-mix(in oklab, hsl(var(--card)) 90%, transparent);
+  }
+
+  .input, .select, .textarea {
+    @apply w-full rounded-xl px-3.5 py-2.5 text-sm outline-none backdrop-blur;
+    background: color-mix(in oklab, hsl(var(--card)) 96%, transparent);
+    color: hsl(var(--text));
+    border: 1px solid color-mix(in oklab, hsl(var(--muted)) 40%, transparent);
+    box-shadow: var(--shadow-1);
+  }
+  .input:focus, .select:focus, .textarea:focus {
+    border-color: hsl(var(--info));
+    box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--info)) 25%, transparent);
+  }
+
+  .alert {
+    @apply rounded-2xl p-4;
+    background:
+      linear-gradient(180deg,
+        color-mix(in oklab, hsl(var(--warning)) 30%, hsl(var(--card))) 0%,
+        color-mix(in oklab, hsl(var(--warning)) 20%, hsl(var(--card))) 100%);
+    border: 1px solid color-mix(in oklab, hsl(var(--warning)) 52%, transparent);
+    box-shadow: var(--shadow-1);
+  }
+
+  /* Tables: wrap in a scroll container on small screens */
+  .table { @apply w-full text-sm min-w-[560px]; }
+  .table th {
+    @apply text-left font-semibold pb-2;
+    border-bottom: 1px solid color-mix(in oklab, hsl(var(--muted)) 50%, transparent);
+  }
+  .table td {
+    @apply py-3 align-middle;
+    border-bottom: 1px solid color-mix(in oklab, hsl(var(--muted)) 35%, transparent);
+  }
+  .table-scroll {
+    @apply -mx-4 sm:mx-0 overflow-x-auto;
+    padding-left: 1rem; padding-right: 1rem;
+  }
+
+  /* Map frame — responsive height */
+  .map-frame {
+    @apply rounded-2xl overflow-hidden border border-neutral-200/60 dark:border-neutral-800/60;
+    height: 320px;           /* phones */
+  }
+  @media (min-width: 640px) { .map-frame { height: 380px; } }   /* sm */
+  @media (min-width: 768px) { .map-frame { height: 420px; } }   /* md */
+  @media (min-width: 1024px){ .map-frame { height: 480px; } }   /* lg */
+
+  /* Floating Action Button (optional) */
+  .fab {
+    @apply fixed z-40 bottom-6 right-6 h-14 w-14 rounded-full grid place-items-center text-white;
+    background: linear-gradient(135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary-2)) 100%);
+    box-shadow: var(--shadow-2);
+  }
 }
-.btn-ghost {
-  @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold active:scale-[.98] transition
-         bg-transparent hover:bg-neutral-100/60 dark:hover:bg-neutral-800/50;
+
+/* -------------------------------------------------------
+   UTILITIES
+-------------------------------------------------------- */
+@layer utilities {
+  .text-soft { color: hsl(var(--text-soft)); }
+  .divider { @apply h-px w-full; background: color-mix(in oklab, hsl(var(--muted)) 50%, transparent); }
 }
 
-.badge { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs border border-neutral-300/70 dark:border-neutral-700/70; }
-.input { @apply w-full rounded-xl border border-neutral-300/70 dark:border-neutral-700/70 bg-transparent px-3 py-2 outline-none focus:ring-2 focus:ring-neutral-400/50; }
-.table { @apply w-full text-sm; }
-.table th { @apply text-left font-semibold border-b border-neutral-200 dark:border-neutral-800 pb-2; }
-.table td { @apply border-b border-neutral-100 dark:border-neutral-900 py-3; }
+/* -------------------------------------------------------
+   MAP CONTAINER
+-------------------------------------------------------- */
+.leaflet-container { border-radius: 1rem; z-index: 0; }
